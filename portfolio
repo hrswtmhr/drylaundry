@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+  <head>
+    <title>天気</title>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--IEはサポ終したがまだ使える-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--link rel="stylesheet" href="まだできてないCSS"--></!--link></!--IEはサポ終したがまだ使える-->
+  </head>
+
+  <body>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <!--jqueryで取得、bodyに書いたほうが動かしやすい-->
+    <script type="text/javascript">
+    //ここらへんで位置情報の取得を行う
+    let city = "fukuoka";
+    let appid = "faf50dfe9948161f241fa52f85415fb8";//openweathermapのAIPKEY
+    const Url = "https://api.openweathermap.org/data/2.5/weather?APPID=" + appid + "&q=" + city + ",jp;";
+    let XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+    //まだrequireが参照できてない、どこからか引っ張ってくるかも
+    let xhr = new XMLhttpRequest();
+    xhr.open("GET",Url);
+    xhr.send();
+    xhr.onreadystatechange = function(){
+      if(xhr.readystate == 4){
+        ShowTodaysWeather(xhr.responseText);
+      }
+    }
+
+    //XMLのデータをJSONで簡易的に表示
+    function ShowTodaysWeather(response){
+      let obj = JSON.parse(response);
+      let weather = obj.weather[0].description;
+      let city = obj.name;
+      let temp = obj.main.temp;
+      let humidity = obj.main.humidity
+      console.log("現在の"+city+"の天気は"+weather);
+      console.log("気温は"+temp+"度");
+    }
+
+    //洗濯物の分岐
+    if((weather===sun)&&(temp>20)){
+      console.log('  外干しとても乾きやすい  \n\n  ※風が吹いてればより早く乾くかも');
+    }else if((weather!=rain)&&(humidity<50)){
+      console.log('  風があれば乾きやすいです  \n\n  ※雨が降りそうであれば部屋干しする');
+    }else if((weather!=rain)&&(humidity>50)){
+      console.log('  湿度が高いため乾きづらいです  \n\n  ※部屋干しで除湿つけたりする');
+    }else{
+      console.log('  雨なので外干ししないでください  \n\n  ※部屋干しで除湿つけたりする');
+    }
+    </script>
+
+  </body>
+
+</html>
